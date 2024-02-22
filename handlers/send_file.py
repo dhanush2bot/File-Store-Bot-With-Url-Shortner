@@ -7,7 +7,9 @@ from configs import Config
 # Initialize the Pyrogram client
 app = Client("my_bot")
 
+# Global variable to track the number of received files
 received_files = 0
+total_files = 0
 
 # Reply to the user when a file is forwarded
 async def reply_forward(message: Message, file_id: int):
@@ -34,13 +36,12 @@ async def media_forward(bot: Client, user_id: int, file_id: int):
 
 # Send media with button and reply
 async def send_media_and_reply(bot: Client, user_id: int, file_id: int, total_files: int):
-    # Forward the media
+    # Forward the media with the button
     sent_message = await media_forward(bot, user_id, file_id)
 
-    # Add the button to the existing caption
-    caption = sent_message.caption.markdown if sent_message.caption else ""
+    # Add the button to the media caption
     button = InlineKeyboardMarkup([[InlineKeyboardButton("Click Here", url="http://example.com")]])
-    await sent_message.edit_caption(caption, reply_markup=button)
+    await sent_message.edit_caption("", reply_markup=button)
 
     # Delete the message after 30 minutes
     asyncio.create_task(delete_after_delay(sent_message, 1800))
@@ -50,7 +51,7 @@ async def send_media_and_reply(bot: Client, user_id: int, file_id: int, total_fi
     received_files += 1
     if received_files == total_files:
         # Send the final message
-        await bot.send_message(user_id, "Files will be deleted in 30 minutes to avoid copyright issues. Please forward and save them.")
+        await reply_forward(sent_message, file_id)
 
 # Delete a message after a delay
 async def delete_after_delay(message, delay):
@@ -61,6 +62,6 @@ async def delete_after_delay(message, delay):
 @app.on_message()
 async def handle_message(client, message):
     if message.media:
-        # Send media with button and reply
-        await send_media_and_reply(client, message.from_user.id, message.message_id)
+        # Assuming you have the total_files count stored in a variable called total_files
+        await send_media_and_reply(client, message.from_user.id, message.message_id, total_files)
 
