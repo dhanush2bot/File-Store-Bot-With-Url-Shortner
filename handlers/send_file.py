@@ -32,20 +32,18 @@ async def media_forward(bot: Client, user_id: int, file_id: int):
 
 # Send media with button and reply
 async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
-    # Get the file name
-    message = await bot.get_messages(user_id, file_id)
-    file_name = message.document.file_name if message.document else message.video.file_name
-
     # Create a button
     button = InlineKeyboardMarkup([[InlineKeyboardButton("Click Here", url="http://example.com")]])
 
-    # Forward the media with the button and set the caption as the file name
+    # Forward the media with the button
     sent_message = await media_forward(bot, user_id, file_id)
-    await sent_message.edit_caption(file_name, reply_markup=button)
+
+    # Delete the custom caption and set the button
+    await sent_message.edit_caption("", reply_markup=button)
 
     # Delete the message after 30 minutes
     asyncio.create_task(delete_after_delay(sent_message, 1800))
-
+    
 # Delete a message after a delay
 async def delete_after_delay(message, delay):
     await asyncio.sleep(delay)
