@@ -74,16 +74,18 @@ async def start(bot: Client, cmd: Message):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("Updates Channel", url="https://t.me/VJ_Botz")
+                        InlineKeyboardButton("• 𝑼𝒑𝒅𝒂𝒕𝒆𝒔 𝑪𝒉𝒂𝒏𝒏𝒆𝒍 •", url="https://t.me/filmyspotupdate")
                     ],
                     [
-                        InlineKeyboardButton("About Bot", callback_data="aboutbot"),
-                        InlineKeyboardButton("About Dev", callback_data="aboutdevs"),
-                        InlineKeyboardButton("Close 🚪", callback_data="closeMessage")
+                        InlineKeyboardButton("• 𝑨𝒃𝒐𝒖𝒕 𝑩𝒐𝒕", callback_data="aboutbot"),
+                        InlineKeyboardButton("𝑺𝒖𝒑𝒑𝒐𝒓𝒕 •", url="https://t.me/FilmySpotSupport_bot"),
                     ],
                     [
-                        InlineKeyboardButton("Support Group", url="https://t.me/VJ_Bot_Disscussion"),
-                        InlineKeyboardButton("YouTube Channel", url="https://youtube.com/@Tech_VJ")
+                        InlineKeyboardButton("• 𝑴𝒐𝒗𝒊𝒆 𝑹𝒆𝒒𝒖𝒆𝒔𝒕 𝑮𝒓𝒐𝒖𝒑", url=" https://t.me/+o_VcAI8GRQ8zYzA9"),
+                        InlineKeyboardButton("𝑴𝒐𝒗𝒊𝒆 𝑪𝒉𝒂𝒏𝒏𝒆𝒍 •", url="https://t.me/filmyspotmovie")
+                    ],
+                    [
+                        InlineKeyboardButton("• 𝑪𝒍𝒐𝒔𝒆 •", callback_data="closeMessage")
                     ]
                 ]
             )
@@ -124,7 +126,7 @@ async def main(bot: Client, message: Message):
                 return
 
         if message.from_user.id in Config.BANNED_USERS:
-            await message.reply_text("Sorry, You are banned!\n\nContact [𝙎𝙪𝙥𝙥𝙤𝙧𝙩 𝙂𝙧𝙤𝙪𝙥](https://t.me/VJ_Bot_Disscussion)",
+            await message.reply_text("Sorry, You are banned!\n\nContact [𝙎𝙪𝙥𝙥𝙤𝙧𝙩 𝙂𝙧𝙤𝙪𝙥](https://t.me/FilmySpotSupport_bot)",
                                      disable_web_page_preview=True)
             return
 
@@ -134,8 +136,8 @@ async def main(bot: Client, message: Message):
         await message.reply_text(
             text="**Choose an option from below:**",
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("Save in Batch", callback_data="addToBatchTrue")],
-                [InlineKeyboardButton("Get Sharable Link", callback_data="addToBatchFalse")]
+                [InlineKeyboardButton("• 𝑺𝒂𝒗𝒆 𝒊𝒏 𝑩𝒂𝒕𝒄𝒉 •", callback_data="addToBatchTrue")],
+                [InlineKeyboardButton("• 𝑮𝒆𝒕 𝑺𝒉𝒂𝒓𝒂𝒃𝒍𝒆 𝑳𝒊𝒏𝒌 •", callback_data="addToBatchFalse")]
             ]),
             quote=True,
             disable_web_page_preview=True
@@ -152,7 +154,7 @@ async def main(bot: Client, message: Message):
         try:
             forwarded_msg = await message.forward(Config.DB_CHANNEL)
             file_er_id = str(forwarded_msg.id)
-            share_link = f"https://t.me/{Config.BOT_USERNAME}?start=VJBotz_{str_to_b64(file_er_id)}"
+            share_link = f"https://t.me/{Config.BOT_USERNAME}?start=filmyspot_{str_to_b64(file_er_id)}"
             CH_edit = await bot.edit_message_reply_markup(message.chat.id, message.id,
                                                           reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(
                                                               "Get Sharable Link", url=share_link)]]))
@@ -318,12 +320,7 @@ async def button(bot: Client, cmd: CallbackQuery):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("Source Codes of Bot",
-                                             url="https://youtube.com/@Tech_VJ")
-                    ],
-                    [
-                        InlineKeyboardButton("Go Home", callback_data="gotohome"),
-                        InlineKeyboardButton("About Dev", callback_data="aboutdevs")
+                        InlineKeyboardButton("• 𝑮𝒐 𝑯𝒐𝒎𝒆 •", callback_data="gotohome")
                     ]
                 ]
             )
@@ -336,12 +333,8 @@ async def button(bot: Client, cmd: CallbackQuery):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("Source Codes of Bot",
-                                             url="https://youtube.com/@Tech_VJ")
-                    ],
-                    [
-                        InlineKeyboardButton("About Bot", callback_data="aboutbot"),
-                        InlineKeyboardButton("Go Home", callback_data="gotohome")
+                        InlineKeyboardButton("• 𝑨𝒃𝒐𝒖𝒕 𝑩𝒐𝒕", callback_data="aboutbot"),
+                        InlineKeyboardButton("𝑮𝒐 𝑯𝒐𝒎𝒆 •", callback_data="gotohome")
                     ]
                 ]
             )
@@ -354,16 +347,18 @@ async def button(bot: Client, cmd: CallbackQuery):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("Updates Channel", url="https://t.me/VJ_Botz")
+                        InlineKeyboardButton("• 𝑼𝒑𝒅𝒂𝒕𝒆𝒔 𝑪𝒉𝒂𝒏𝒏𝒆𝒍 •", url="https://t.me/filmyspotupdate")
                     ],
                     [
-                        InlineKeyboardButton("About Bot", callback_data="aboutbot"),
-                        InlineKeyboardButton("About Dev", callback_data="aboutdevs"),
-                        InlineKeyboardButton("Close 🚪", callback_data="closeMessage")
+                        InlineKeyboardButton("• 𝑨𝒃𝒐𝒖𝒕 𝑩𝒐𝒕", callback_data="aboutbot"),
+                        InlineKeyboardButton("𝑺𝒖𝒑𝒑𝒐𝒓𝒕 •", url="https://t.me/FilmySpotSupport_bot"),
                     ],
                     [
-                        InlineKeyboardButton("Support Group", url="https://t.me/VJ_Bot_Disscussion"),
-                        InlineKeyboardButton("YouTube Channel", url="https://youtube.com/@Tech_VJ")
+                        InlineKeyboardButton("• 𝑴𝒐𝒗𝒊𝒆 𝑹𝒆𝒒𝒖𝒆𝒔𝒕 𝑮𝒓𝒐𝒖𝒑", url=" https://t.me/+o_VcAI8GRQ8zYzA9"),
+                        InlineKeyboardButton("𝑴𝒐𝒗𝒊𝒆 𝑪𝒉𝒂𝒏𝒏𝒆𝒍 •", url="https://t.me/filmyspotmovie")
+                    ],
+                    [
+                        InlineKeyboardButton("• 𝑪𝒍𝒐𝒔𝒆 •", callback_data="closeMessage")
                     ]
                 ]
             )
@@ -379,7 +374,7 @@ async def button(bot: Client, cmd: CallbackQuery):
                 user = await bot.get_chat_member(channel_chat_id, cmd.message.chat.id)
                 if user.status == "kicked":
                     await cmd.message.edit(
-                        text="Sorry Sir, You are Banned to use me. Contact my [𝙎𝙪𝙥𝙥𝙤𝙧𝙩 𝙂𝙧𝙤𝙪𝙥](https://t.me/VJ_Bot_Disscussion).",
+                        text="Sorry Sir, You are Banned to use me. Contact my [𝙎𝙪𝙥𝙥𝙤𝙧𝙩 𝙂𝙧𝙤𝙪𝙥](https://t.me/FilmySpotSupport_bot).",
                         disable_web_page_preview=True
                     )
                     return
@@ -390,10 +385,10 @@ async def button(bot: Client, cmd: CallbackQuery):
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
-                                InlineKeyboardButton("🤖 Join Updates Channel", url=invite_link.invite_link)
+                                InlineKeyboardButton("• 𝑱𝒐𝒊𝒏 𝑼𝒑𝒅𝒂𝒕𝒆𝒔 𝑪𝒉𝒂𝒏𝒏𝒆𝒍 •", url=invite_link.invite_link)
                             ],
                             [
-                                InlineKeyboardButton("🔄 Refresh 🔄", callback_data="refreshmeh")
+                                InlineKeyboardButton("↻ 𝑹𝒆𝒇𝒓𝒆𝒔𝒉 ↻", callback_data="refreshmeh")
                             ]
                         ]
                     )
@@ -401,7 +396,7 @@ async def button(bot: Client, cmd: CallbackQuery):
                 return
             except Exception:
                 await cmd.message.edit(
-                    text="Something went Wrong. Contact my [𝙎𝙪𝙥𝙥𝙤𝙧𝙩 𝙂𝙧𝙤𝙪𝙥](https://t.me/VJ_Bot_Disscussion).",
+                    text="Something went Wrong. Contact my [𝙎𝙪𝙥𝙥𝙤𝙧𝙩 𝙂𝙧𝙤𝙪𝙥](https://t.me/FilmySpotSupport_bot).",
                     disable_web_page_preview=True
                 )
                 return
@@ -411,12 +406,11 @@ async def button(bot: Client, cmd: CallbackQuery):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("Updates Channel", url="https://t.me/VJ_Botz"),
-                        InlineKeyboardButton("Support Group", url="https://t.me/VJ_Bot_Disscussion")
+                        InlineKeyboardButton("• 𝑼𝒑𝒅𝒂𝒕𝒆𝒔 𝑪𝒉𝒂𝒏𝒏𝒆𝒍", url="https://t.me/filmyspotupdate"),
+                        InlineKeyboardButton("𝑺𝒖𝒑𝒑𝒐𝒓𝒕 •", url="https://t.me/FilmySpotSupport_bot")
                     ],
                     [
-                        InlineKeyboardButton("About Bot", callback_data="aboutbot"),
-                        InlineKeyboardButton("About Dev", callback_data="aboutdevs")
+                        InlineKeyboardButton("• 𝑨𝒃𝒐𝒖𝒕 𝑩𝒐𝒕 •", callback_data="aboutbot")
                     ]
                 ]
             )
@@ -444,8 +438,8 @@ async def button(bot: Client, cmd: CallbackQuery):
         await cmd.message.edit("File Saved in Batch!\n\n"
                                "Press below button to get batch link.",
                                reply_markup=InlineKeyboardMarkup([
-                                   [InlineKeyboardButton("Get Batch Link", callback_data="getBatchLink")],
-                                   [InlineKeyboardButton("Close Message", callback_data="closeMessage")]
+                                   [InlineKeyboardButton(" ◤ 𝑮𝒆𝒕 𝑩𝒂𝒕𝒄𝒉 𝑳𝒊𝒏𝒌 ◥", callback_data="getBatchLink")],
+                                   [InlineKeyboardButton("• 𝑪𝒍𝒐𝒔𝒆 𝑴𝒆𝒔𝒔𝒂𝒈𝒆 •", callback_data="closeMessage")]
                                ]))
 
     elif "addToBatchFalse" in cb_data:
