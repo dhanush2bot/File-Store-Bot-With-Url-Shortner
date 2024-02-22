@@ -38,8 +38,20 @@ async def media_forward(bot: Client, user_id: int, file_id: int):
 async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
     global files_sent, total_files
     total_files += 1
-    # Get the file name
-    file_name = await bot.get_messages(user_id, file_id).document.file_name
+
+    # Get the message object for the file
+    message = await bot.get_messages(user_id, file_id)
+
+    # Check if the message is a document or a video
+    if message.document:
+        file_name = message.document.file_name
+        file_type = "document"
+    elif message.video:
+        file_name = message.video.file_name
+        file_type = "video"
+    else:
+        # Handle other types of media here (e.g., audio, photo, etc.)
+        return
 
     # Create a button
     button = InlineKeyboardMarkup([[InlineKeyboardButton("Click Here", url="http://example.com")]])
@@ -48,7 +60,7 @@ async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
     sent_message = await media_forward(bot, user_id, file_id)
 
     # Add the button to the media caption
-    caption = f"<b>File Name:</b> <code>{file_name}</code>"
+    caption = f"<b>{file_type.capitalize()} Name:</b> <code>{file_name}</code>"
     await sent_message.edit_caption(caption, parse_mode="html", reply_markup=button)
 
     # Delete the message after 30 minutes
@@ -76,5 +88,4 @@ async def start_command(client, message):
 async def handle_media(client, message):
     # Forward the media with a button and reply
     await send_media_and_reply(client, message.from_user.id, message.message_id)
-
 
