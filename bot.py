@@ -201,7 +201,7 @@ async def button(bot: Client, cmd: CallbackQuery):
 async def main():
     await Bot.start()
     print("Bot Started!")
-    await main_broadcast_handler(Bot)
+    await main_broadcast_handler(Bot, db=db)  # Pass the `db` argument here
     await Bot.idle()
 
 if __name__ == "__main__":
