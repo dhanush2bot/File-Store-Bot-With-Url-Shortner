@@ -11,7 +11,7 @@ app = Client("my_bot")
 # Reply to the user with the warning message and the button
 async def reply_forward(message: Message, file_id: int):
     try:
-        await asyncio.sleep(0.3)
+        await asyncio.sleep(0.1)
 
         # Reply with the warning message and the button
         await message.reply_text(
@@ -42,7 +42,7 @@ async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
 
         # Add the button to the existing caption
         caption = sent_message.caption.markdown if sent_message.caption else ""
-        button = InlineKeyboardMarkup([[InlineKeyboardButton("Click Here", url="http://example.com")]])
+        button = InlineKeyboardMarkup([[InlineKeyboardButton("ᴡᴀᴛᴄʜ ᴏɴʟɪɴᴇ 👀 / ꜰᴀsᴛ ᴅᴏᴡɴʟᴏᴀᴅ 🗂️", callback_data="stream_button")]])
         await sent_message.edit_caption(caption, reply_markup=button)
 
         # Add the warning message as a reply to the media
