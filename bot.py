@@ -37,6 +37,7 @@ from handlers.save_media import (
     save_media_in_channel,
     save_batch_media_in_channel
 )
+from handlers.stream import direct_gen_handler
 
 MediaList = {}
 
@@ -71,7 +72,7 @@ async def start(bot: Client, cmd: Message):
         await cmd.reply_text(
             Config.HOME_TEXT.format(cmd.from_user.first_name, cmd.from_user.id),
             disable_web_page_preview=True,
-            reply_markup=InlineKeyboardMarkup(
+            reply_markup=InlineKeyboardMarkup( 
                 [[
                         InlineKeyboardButton("• 𝑼𝒑𝒅𝒂𝒕𝒆𝒔 𝑪𝒉𝒂𝒏𝒏𝒆𝒍 •", url="https://t.me/filmyspotupdate")
                     ],
@@ -360,7 +361,7 @@ async def button(bot: Client, cmd: CallbackQuery):
                     ]
                 ]
             )
-        )
+        ) 
 
     elif "refreshForceSub" in cb_data:
         if Config.UPDATES_CHANNEL:
@@ -413,6 +414,13 @@ async def button(bot: Client, cmd: CallbackQuery):
                 ]
             )
         )
+
+    elif "stream_button" in cb_data:        
+        markup = await direct_gen_handler(cmd.message)
+        if markup:
+            await cmd.message.edit_reply_markup(markup)           
+        return
+
 
     elif cb_data.startswith("ban_user_"):
         user_id = cb_data.split("_", 2)[-1]
