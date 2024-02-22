@@ -1,5 +1,5 @@
-import html
 import asyncio
+import html
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 from pyrogram.errors import FloodWait
@@ -40,29 +40,14 @@ async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
     global files_sent, total_files
     total_files += 1
 
-    # Get the message object for the file
-    message = await bot.get_messages(user_id, file_id)
-
-    # Check if the message is a document or a video
-    if message.document:
-        file_name = message.document.file_name
-        file_type = "document"
-    elif message.video:
-        file_name = message.video.file_name
-        file_type = "video"
-    else:
-        # Handle other types of media here (e.g., audio, photo, etc.)
-        return
+    # Forward the media message without a caption
+    sent_message = await media_forward(bot, user_id, file_id)
 
     # Create a button
     button = InlineKeyboardMarkup([[InlineKeyboardButton("Click Here", url="http://example.com")]])
 
-    # Forward the media with the button
-    sent_message = await media_forward(bot, user_id, file_id)
-
-    # Add the button to the media caption
-    caption = f"<b>Name:</b>{file_name}"
-    await sent_message.edit_caption(caption, reply_markup=button)
+    # Add the button to the media message
+    await sent_message.edit_reply_markup(reply_markup=button)
 
     # Delete the message after 30 minutes
     asyncio.create_task(delete_after_delay(sent_message, 1800))
@@ -79,13 +64,11 @@ async def delete_after_delay(message, delay):
     await asyncio.sleep(delay)
     await message.delete()
 
-# Start the bot
-@app.on_message(filters.command("start"))
-async def start_command(client, message):
-    await message.reply_text("Hello! Send me a media file and I'll forward it to you with a button.")
-
 # Handle incoming media files
 @app.on_message(filters.media)
 async def handle_media(client, message):
     # Forward the media with a button and reply
     await send_media_and_reply(client, message.from_user.id, message.message_id)
+
+# Run the bot
+app.run()
