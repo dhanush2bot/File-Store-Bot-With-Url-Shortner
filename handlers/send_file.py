@@ -7,6 +7,8 @@ from configs import Config
 # Initialize the Pyrogram client
 app = Client("my_bot")
 
+received_files = 0
+
 # Reply to the user when a file is forwarded
 async def reply_forward(message: Message, file_id: int):
     try:
@@ -31,7 +33,7 @@ async def media_forward(bot: Client, user_id: int, file_id: int):
         return media_forward(bot, user_id, file_id)
 
 # Send media with button and reply
-async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
+async def send_media_and_reply(bot: Client, user_id: int, file_id: int, total_files: int):
     # Forward the media
     sent_message = await media_forward(bot, user_id, file_id)
 
@@ -43,6 +45,12 @@ async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
     # Delete the message after 30 minutes
     asyncio.create_task(delete_after_delay(sent_message, 1800))
 
+    # Check if all files have been received
+    global received_files
+    received_files += 1
+    if received_files == total_files:
+        # Send the final message
+        await bot.send_message(user_id, "Files will be deleted in 30 minutes to avoid copyright issues. Please forward and save them.")
 
 # Delete a message after a delay
 async def delete_after_delay(message, delay):
