@@ -8,10 +8,14 @@ from configs import Config
 app = Client("my_bot")
 
 # Reply to the user when a file is forwarded
+# Reply to the user with the warning message and the button
 async def reply_forward(message: Message, file_id: int):
     try:
         # Create the button
         button = InlineKeyboardMarkup([[InlineKeyboardButton("Click Here", url="http://example.com")]])
+
+        # Wait for 0.3 seconds
+        await asyncio.sleep(0.3)
 
         # Reply with the warning message and the button
         await message.reply_text(
