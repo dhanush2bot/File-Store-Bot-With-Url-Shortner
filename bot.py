@@ -354,7 +354,7 @@ async def button(bot: Client, cmd: CallbackQuery):
                         InlineKeyboardButton("𝑺𝒖𝒑𝒑𝒐𝒓𝒕 •", url="https://t.me/FilmySpotSupport_bot"),
                     ],
                     [
-                        InlineKeyboardButton("• 𝑴𝒐𝒗𝒊𝒆 𝑹𝒆𝒒𝒖𝒆𝒔𝒕 𝑮𝒓𝒐𝒖𝒑", url=" https://t.me/+o_VcAI8GRQ8zYzA9"),
+                        InlineKeyboardButton("• 𝑴𝒐𝒗𝒊𝒆 𝑹𝒆𝒒𝒖𝒆𝒔𝒕 𝑮𝒓𝒐𝒖𝒑", url="https://t.me/+o_VcAI8GRQ8zYzA9"),
                         InlineKeyboardButton("𝑴𝒐𝒗𝒊𝒆 𝑪𝒉𝒂𝒏𝒏𝒆𝒍 •", url="https://t.me/filmyspotmovie")
                     ],
                     [
