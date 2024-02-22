@@ -142,13 +142,16 @@ async def main(bot: Client, message: Message):
             disable_web_page_preview=True
         )
     elif message.chat.type == enums.ChatType.CHANNEL:
-        if (message.chat.id == int(Config.LOG_CHANNEL)) or (message.chat.id == int(Config.UPDATES_CHANNEL)) or message.forward_from_chat or message.forward_from:
-            return
-        elif int(message.chat.id) in Config.BANNED_CHAT_IDS:
-            await bot.leave_chat(message.chat.id)
-            return
-        else:
-            pass
+        chat_id = message.chat.id
+        if str(chat_id).isdigit():  # Check if the chat_id is a valid integer
+            chat_id = int(chat_id)
+            if (chat_id == int(Config.LOG_CHANNEL)) or (chat_id == int(Config.UPDATES_CHANNEL)) or message.forward_from_chat or message.forward_from:
+                return
+            elif chat_id in Config.BANNED_CHAT_IDS:
+                await bot.leave_chat(chat_id)
+                return
+            else:
+                print(f"Invalid chat_id: {chat_id}")
 
         try:
             forwarded_msg = await message.forward(Config.DB_CHANNEL)
