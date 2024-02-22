@@ -1,11 +1,15 @@
 import asyncio
-from pyrogram import Client
+from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 from pyrogram.errors import FloodWait
 from configs import Config
 
 # Initialize the Pyrogram client
 app = Client("my_bot")
+
+# Global variables to track the number of files sent and total files
+files_sent = 0
+total_files = 0
 
 # Reply to the user when a file is forwarded
 async def reply_forward(message: Message, file_id: int):
@@ -32,6 +36,11 @@ async def media_forward(bot: Client, user_id: int, file_id: int):
 
 # Send media with button and reply
 async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
+    global files_sent, total_files
+    total_files += 1
+    # Get the file name
+    file_name = await bot.get_messages(user_id, file_id).document.file_name
+
     # Create a button
     button = InlineKeyboardMarkup([[InlineKeyboardButton("Click Here", url="http://example.com")]])
 
@@ -39,11 +48,18 @@ async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
     sent_message = await media_forward(bot, user_id, file_id)
 
     # Add the button to the media caption
-    caption = "Here is your media:"
-    await sent_message.edit_caption(caption, reply_markup=button)
+    caption = f"<b>File Name:</b> <code>{file_name}</code>"
+    await sent_message.edit_caption(caption, parse_mode="html", reply_markup=button)
 
     # Delete the message after 30 minutes
     asyncio.create_task(delete_after_delay(sent_message, 1800))
+
+    # Increment the number of files sent
+    files_sent += 1
+
+    # Check if all files have been sent
+    if files_sent == total_files:
+        await reply_forward(sent_message, file_id)
 
 # Delete a message after a delay
 async def delete_after_delay(message, delay):
@@ -51,9 +67,14 @@ async def delete_after_delay(message, delay):
     await message.delete()
 
 # Start the bot
-@app.on_message()
-async def handle_message(client, message):
-    if message.media:
-        # Send media with button and reply
-        await send_media_and_reply(client, message.from_user.id, message.message_id)
+@app.on_message(filters.command("start"))
+async def start_command(client, message):
+    await message.reply_text("Hello! Send me a media file and I'll forward it to you with a button.")
+
+# Handle incoming media files
+@app.on_message(filters.media)
+async def handle_media(client, message):
+    # Forward the media with a button and reply
+    await send_media_and_reply(client, message.from_user.id, message.message_id)
+
 
