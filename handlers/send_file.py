@@ -61,8 +61,8 @@ async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
     sent_message = await media_forward(bot, user_id, file_id)
 
     # Add the button to the media caption
-    caption = f"<b>{file_type.capitalize()} Name:</b> {html.escape(file_name)}"
-    await sent_message.edit_caption(caption, parse_mode="html", reply_markup=button)
+    caption = f"<b>Name:</b>{file_name}"
+    await sent_message.edit_caption(caption, reply_markup=button)
 
     # Delete the message after 30 minutes
     asyncio.create_task(delete_after_delay(sent_message, 1800))
