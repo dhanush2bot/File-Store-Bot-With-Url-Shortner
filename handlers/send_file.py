@@ -41,17 +41,22 @@ async def media_forward(bot: Client, user_id: int, file_id: int):
 
 # Send media with button and reply
 async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
-    # Forward the media
-    sent_message = await media_forward(bot, user_id, file_id)
+    try:
+        # Forward the media
+        sent_message = await media_forward(bot, user_id, file_id)
 
-    # Add the button to the existing caption
-    caption = sent_message.caption.markdown if sent_message.caption else ""
-    button = InlineKeyboardMarkup([[InlineKeyboardButton("Click Here", url="http://example.com")]])
-    await sent_message.edit_caption(caption, reply_markup=button)
+        # Add the button to the existing caption
+        caption = sent_message.caption.markdown if sent_message.caption else ""
+        button = InlineKeyboardMarkup([[InlineKeyboardButton("Click Here", url="http://example.com")]])
+        await sent_message.edit_caption(caption, reply_markup=button)
 
-    # Delete the message after 30 minutes
-    asyncio.create_task(delete_after_delay(sent_message, 1800))
+        # Add the warning message as a reply to the media
+        await reply_forward(sent_message, file_id)
 
+        # Delete the message after 30 minutes
+        asyncio.create_task(delete_after_delay(sent_message, 1800))
+    except Exception as e:
+        print(f"Error: {e}")
 
 # Delete a message after a delay
 async def delete_after_delay(message, delay):
