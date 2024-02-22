@@ -11,10 +11,6 @@ app = Client("my_bot")
 # Reply to the user with the warning message and the button
 async def reply_forward(message: Message, file_id: int):
     try:
-        # Create the button
-        button = InlineKeyboardMarkup([[InlineKeyboardButton("Click Here", url="http://example.com")]])
-
-        # Wait for 0.3 seconds
         await asyncio.sleep(0.3)
 
         # Reply with the warning message and the button
@@ -22,7 +18,6 @@ async def reply_forward(message: Message, file_id: int):
             f"Files will be deleted in 30 minutes to avoid copyright issues. Please forward and save them.",
             disable_web_page_preview=True,
             quote=True,
-            reply_markup=button
         )
     except FloodWait as e:
         await asyncio.sleep(e.x)
