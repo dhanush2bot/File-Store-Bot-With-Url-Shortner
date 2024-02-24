@@ -129,7 +129,10 @@ async def main(bot: Client, message: Message):
                                      disable_web_page_preview=True)
             return
 
-        if Config.OTHER_USERS_CAN_SAVE_FILE is False:
+        if Config.OTHER_USERS_CAN_SAVE_FILE is False and message.from_user.id != Config.BOT_OWNER:
+            await message.reply_text(
+            "Sorry, only admins can store files here. For more information, contact @FilmySpotSupport_bot."
+            )
             return
 
         await message.reply_text(
