@@ -43,5 +43,3 @@ async def handle_message(client, message):
     if message.media:
         await send_media_and_reply(client, message.from_user.id, message.message_id)
 
-# Run the bot
-app.run()
