@@ -18,7 +18,7 @@ class Config(object):
   BANNED_CHAT_IDS = list(set(int(x) for x in os.environ.get("BANNED_CHAT_IDS", "").split()))
   OTHER_USERS_CAN_SAVE_FILE = bool(os.environ.get("OTHER_USERS_CAN_SAVE_FILE", True))
   FILE_TO_LINK_APPURL = os.environ.get("DIRECT_GEN_URL", "https://filmyspotmovie-16c4510caa97.herokuapp.com") 
-  FILE_TO_LINK_LOG = int(os.environ.get("DIRECT_GEN_DB", "-1002041057749"))
+  FILE_TO_LINK_LOG = int(os.environ.get("DIRECT_GEN_DB", "-1002146038480"))
 
 
   HOME_TEXT = f"""
