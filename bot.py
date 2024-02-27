@@ -1,7 +1,9 @@
-# (c) @TeleRoidGroup || @PredatorHackerzZ
+
 
 import os
 import asyncio
+import datetime
+import random
 import traceback
 from binascii import (
     Error
@@ -32,7 +34,7 @@ from handlers.force_sub_handler import (
     handle_force_sub,
     get_invite_link
 )
-from handlers.broadcast_handlers import main_broadcast_handler
+from handlers.broadcast_handlers import main_broadcast_handler, schedule_broadcast
 from handlers.save_media import (
     save_media_in_channel,
     save_batch_media_in_channel
@@ -69,23 +71,24 @@ async def start(bot: Client, cmd: Message):
     usr_cmd = cmd.text.split("_", 1)[-1]
     if usr_cmd == "/start":
         await add_user_to_database(bot, cmd)
-        await cmd.reply_text(
-            Config.HOME_TEXT.format(cmd.from_user.first_name, cmd.from_user.id),
+        await cmd.reply_photo(
+            photo=random.choice(Config.PICS),
+            caption=Config.HOME_TEXT.format(cmd.from_user.first_name, cmd.from_user.id),
             disable_web_page_preview=True,
-            reply_markup=InlineKeyboardMarkup( 
+            reply_markup=InlineKeyboardMarkup(
                 [[
-                        InlineKeyboardButton("• 𝑼𝒑𝒅𝒂𝒕𝒆𝒔 𝑪𝒉𝒂𝒏𝒏𝒆𝒍 •", url="https://t.me/filmyspotupdate")
+                        InlineKeyboardButton("• ᴜᴘᴅᴀᴛᴇꜱ ᴄʜᴀɴɴᴇʟ •", url="https://t.me/filmyspotupdate")
                     ],
                     [
-                        InlineKeyboardButton("• 𝑨𝒃𝒐𝒖𝒕 𝑩𝒐𝒕", callback_data="aboutbot"),
-                        InlineKeyboardButton("𝑺𝒖𝒑𝒑𝒐𝒓𝒕 •", url="https://t.me/FilmySpotSupport_bot"),
+                        InlineKeyboardButton("• ᴀʙᴏᴜᴛ ʙᴏᴛ", callback_data="aboutbot"),
+                        InlineKeyboardButton("ꜱᴜᴘᴘᴏʀᴛ •", url="https://t.me/FilmySpotSupport_bot"),
                     ],
                     [
-                        InlineKeyboardButton("• 𝑴𝒐𝒗𝒊𝒆 𝑹𝒆𝒒𝒖𝒆𝒔𝒕 𝑮𝒓𝒐𝒖𝒑", url="https://t.me/+o_VcAI8GRQ8zYzA9"),
-                        InlineKeyboardButton("𝑴𝒐𝒗𝒊𝒆 𝑪𝒉𝒂𝒏𝒏𝒆𝒍 •", url="https://t.me/filmyspotmovie")
+                        InlineKeyboardButton("• ᴍᴏᴠɪᴇ ʀᴇǫᴜᴇꜱᴛꜱ ɢʀᴏᴜᴘ", url="https://t.me/+o_VcAI8GRQ8zYzA9"),
+                        InlineKeyboardButton("ᴍᴏᴠɪᴇ ᴄʜᴀɴɴᴇʟ •", url="https://t.me/filmyspotmovie")
                     ],
                     [
-                        InlineKeyboardButton("• 𝑪𝒍𝒐𝒔𝒆 •", callback_data="closeMessage")
+                        InlineKeyboardButton("• ᴄʟᴏꜱᴇ •", callback_data="closeMessage")
                     ]]
             )
         )
@@ -138,28 +141,25 @@ async def main(bot: Client, message: Message):
         await message.reply_text(
             text="**Choose an option from below:**",
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("• 𝑺𝒂𝒗𝒆 𝒊𝒏 𝑩𝒂𝒕𝒄𝒉 •", callback_data="addToBatchTrue")],
-                [InlineKeyboardButton("• 𝑮𝒆𝒕 𝑺𝒉𝒂𝒓𝒂𝒃𝒍𝒆 𝑳𝒊𝒏𝒌 •", callback_data="addToBatchFalse")]
+                [InlineKeyboardButton("• ꜱᴀᴠᴇ ɪɴ ʙᴀᴛᴄʜ •", callback_data="addToBatchTrue")],
+                [InlineKeyboardButton("• ɢᴇᴛ ꜱʜᴀʀᴇᴀʙʟᴇ ʟɪɴᴋ •", callback_data="addToBatchFalse")]
             ]),
             quote=True,
             disable_web_page_preview=True
         )
     elif message.chat.type == enums.ChatType.CHANNEL:
-        chat_id = message.chat.id
-        if str(chat_id).isdigit():  # Check if the chat_id is a valid integer
-            chat_id = int(chat_id)
-            if (chat_id == int(Config.LOG_CHANNEL)) or (chat_id == int(Config.UPDATES_CHANNEL)) or message.forward_from_chat or message.forward_from:
-                return
-            elif chat_id in Config.BANNED_CHAT_IDS:
-                await bot.leave_chat(chat_id)
-                return
-            else:
-                print(f"Invalid chat_id: {chat_id}")
+        if (message.chat.id == int(Config.LOG_CHANNEL)) or (message.chat.id == int(Config.UPDATES_CHANNEL)) or message.forward_from_chat or message.forward_from:
+            return
+        elif int(message.chat.id) in Config.BANNED_CHAT_IDS:
+            await bot.leave_chat(message.chat.id)
+            return
+        else:
+            pass
 
         try:
             forwarded_msg = await message.forward(Config.DB_CHANNEL)
             file_er_id = str(forwarded_msg.id)
-            share_link = f"https://t.me/{Config.BOT_USERNAME}?start=filmyspot_{str_to_b64(file_er_id)}"
+            share_link = f"https://t.me/{Config.BOT_USERNAME}?start=VJBotz_{str_to_b64(file_er_id)}"
             CH_edit = await bot.edit_message_reply_markup(message.chat.id, message.id,
                                                           reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(
                                                               "Get Sharable Link", url=share_link)]]))
@@ -190,6 +190,21 @@ async def main(bot: Client, message: Message):
 async def broadcast_handler_open(_, m: Message):
     await main_broadcast_handler(m, db)
 
+@Bot.on_message(filters.command(["schedule_broadcast"]))
+async def schedule_broadcast_command_handler(client, message):
+    if message.reply_to_message is None:
+        await message.reply_text("Please reply to a message to broadcast.")
+        return
+    if len(message.command) < 2:
+        await message.reply_text("Please provide a scheduled time to broadcast.")
+        return
+    try:
+        scheduled_time = datetime.datetime.strptime(message.command[1], "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        await message.reply_text("Invalid scheduled time format. Use YYYY-MM-DD HH:MM:SS.")
+        return
+    await schedule_broadcast(message, db, scheduled_time)
+    await message.reply_text(f"Broadcast scheduled for {scheduled_time}.")
 
 @Bot.on_message(filters.private & filters.command("status") & filters.user(Config.BOT_OWNER))
 async def sts(_, m: Message):
@@ -325,49 +340,53 @@ async def button(bot: Client, cmd: CallbackQuery):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("• 𝑮𝒐 𝑯𝒐𝒎𝒆 •", callback_data="gotohome")
+                        InlineKeyboardButton("• 𝗔𝗕𝗢𝗨𝗧 𝗧𝗛𝗘 𝗦𝗢𝗨𝗥𝗖𝗘 𝗖𝗢𝗗𝗘 •",
+                                             callback_data="source")
+                    ],
+                    [
+                        InlineKeyboardButton("• ɢᴏ ʜᴏᴍᴇ •", callback_data="gotohome")
+                    #    InlineKeyboardButton("About Dev", callback_data="aboutdevs")
                     ]
                 ]
             )
         )
 
-    #elif "aboutdevs" in cb_data:
-    #    await cmd.message.edit(
-    #        Config.ABOUT_DEV_TEXT,
-     #       disable_web_page_preview=True,
-    #        reply_markup=InlineKeyboardMarkup(
-     #           [
-    #                [
-    #                    InlineKeyboardButton("• 𝑨𝒃𝒐𝒖𝒕 𝑩𝒐𝒕", callback_data="aboutbot"),
-    #                    InlineKeyboardButton("𝑮𝒐 𝑯𝒐𝒎𝒆 •", callback_data="gotohome")
-    #                ]
-    #            ]
-    #        )
-    #    )
-
-    elif "gotohome" in cb_data:
+    elif "source" in cb_data:
         await cmd.message.edit(
-            Config.HOME_TEXT.format(cmd.message.chat.first_name, cmd.message.chat.id),
+           Config.SOURCE_CODE,
             disable_web_page_preview=True,
-            reply_markup=InlineKeyboardMarkup(
-                [
+             reply_markup=InlineKeyboardMarkup(
+                 [
                     [
-                        InlineKeyboardButton("• 𝑼𝒑𝒅𝒂𝒕𝒆𝒔 𝑪𝒉𝒂𝒏𝒏𝒆𝒍 •", url="https://t.me/filmyspotupdate")
-                    ],
-                    [
-                        InlineKeyboardButton("• 𝑨𝒃𝒐𝒖𝒕 𝑩𝒐𝒕", callback_data="aboutbot"),
-                        InlineKeyboardButton("𝑺𝒖𝒑𝒑𝒐𝒓𝒕 •", url="https://t.me/FilmySpotSupport_bot"),
-                    ],
-                    [
-                        InlineKeyboardButton("• 𝑴𝒐𝒗𝒊𝒆 𝑹𝒆𝒒𝒖𝒆𝒔𝒕 𝑮𝒓𝒐𝒖𝒑", url="https://t.me/+o_VcAI8GRQ8zYzA9"),
-                        InlineKeyboardButton("𝑴𝒐𝒗𝒊𝒆 𝑪𝒉𝒂𝒏𝒏𝒆𝒍 •", url="https://t.me/filmyspotmovie")
-                    ],
-                    [
-                        InlineKeyboardButton("• 𝑪𝒍𝒐𝒔𝒆 •", callback_data="closeMessage")
+                        InlineKeyboardButton("• ᴄᴏɴᴛᴀᴄᴛ", url="https://t.me/FilmySpotSupport_bot"),
+                        InlineKeyboardButton("ɢᴏ ʙᴀᴄᴋ •", callback_data="aboutbot")
                     ]
                 ]
             )
-        ) 
+        )
+
+    elif "gotohome" in cb_data:
+        await cmd.reply_photo(
+            photo=random.choice(Config.PICS),
+            caption=Config.HOME_TEXT.format(cmd.message.chat.first_name, cmd.message.chat.id),
+            disable_web_page_preview=True,
+            reply_markup=InlineKeyboardMarkup(
+                                    [[
+                        InlineKeyboardButton("• ᴜᴘᴅᴀᴛᴇꜱ ᴄʜᴀɴɴᴇʟ •", url="https://t.me/filmyspotupdate")
+                    ],
+                    [
+                        InlineKeyboardButton("• ᴀʙᴏᴜᴛ ʙᴏᴛ", callback_data="aboutbot"),
+                        InlineKeyboardButton("ꜱᴜᴘᴘᴏʀᴛ •", url="https://t.me/FilmySpotSupport_bot"),
+                    ],
+                    [
+                        InlineKeyboardButton("• ᴍᴏᴠɪᴇ ʀᴇǫᴜᴇꜱᴛꜱ ɢʀᴏᴜᴘ", url="https://t.me/+o_VcAI8GRQ8zYzA9"),
+                        InlineKeyboardButton("ᴍᴏᴠɪᴇ ᴄʜᴀɴɴᴇʟ •", url="https://t.me/filmyspotmovie")
+                    ],
+                    [
+                        InlineKeyboardButton("• ᴄʟᴏꜱᴇ •", callback_data="closeMessage")
+                    ]]
+            )
+        )
 
     elif "refreshForceSub" in cb_data:
         if Config.UPDATES_CHANNEL:
@@ -390,10 +409,10 @@ async def button(bot: Client, cmd: CallbackQuery):
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
-                                InlineKeyboardButton("• 𝑱𝒐𝒊𝒏 𝑼𝒑𝒅𝒂𝒕𝒆𝒔 𝑪𝒉𝒂𝒏𝒏𝒆𝒍 •", url=invite_link.invite_link)
+                                InlineKeyboardButton("↖ Jᴏɪɴ ᴜᴘᴅᴀᴛᴇꜱ ᴄʜᴀɴɴᴇʟ ↗", url=invite_link.invite_link)
                             ],
                             [
-                                InlineKeyboardButton("↻ 𝑹𝒆𝒇𝒓𝒆𝒔𝒉 ↻", callback_data="refreshmeh")
+                                InlineKeyboardButton("↻ ʀᴇғʀᴇꜱʜ ↻", callback_data="refreshmeh")
                             ]
                         ]
                     )
@@ -405,28 +424,29 @@ async def button(bot: Client, cmd: CallbackQuery):
                     disable_web_page_preview=True
                 )
                 return
-        await cmd.message.edit(
-            text=Config.HOME_TEXT.format(cmd.message.chat.first_name, cmd.message.chat.id),
+        await cmd.reply_photo(
+            photo=random.choice(Config.PICS),
+            caption=Config.HOME_TEXT.format(cmd.message.chat.first_name, cmd.message.chat.id),
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("• 𝑼𝒑𝒅𝒂𝒕𝒆𝒔 𝑪𝒉𝒂𝒏𝒏𝒆𝒍", url="https://t.me/filmyspotupdate"),
-                        InlineKeyboardButton("𝑺𝒖𝒑𝒑𝒐𝒓𝒕 •", url="https://t.me/FilmySpotSupport_bot")
+                        InlineKeyboardButton("• ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ", url="https://t.me/filmyspotupdate"),
+                        InlineKeyboardButton("ꜱᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ •", url="https://t.me/FilmySpotSupport_bot")
                     ],
                     [
-                        InlineKeyboardButton("• 𝑨𝒃𝒐𝒖𝒕 𝑩𝒐𝒕 •", callback_data="aboutbot")
+                        InlineKeyboardButton("• ᴀʙᴏᴜᴛ ʙᴏᴛ •", callback_data="aboutbot")
+                    #    InlineKeyboardButton("About Dev", callback_data="aboutdevs")
                     ]
                 ]
             )
         )
-
-    elif "stream_button" in cb_data:        
+    
+    elif cmd.data == "stream_button":        
         markup = await direct_gen_handler(cmd.message)
         if markup:
             await cmd.message.edit_reply_markup(markup)           
-        return
-
+        return 
 
     elif cb_data.startswith("ban_user_"):
         user_id = cb_data.split("_", 2)[-1]
@@ -450,8 +470,8 @@ async def button(bot: Client, cmd: CallbackQuery):
         await cmd.message.edit("File Saved in Batch!\n\n"
                                "Press below button to get batch link.",
                                reply_markup=InlineKeyboardMarkup([
-                                   [InlineKeyboardButton(" ◤ 𝑮𝒆𝒕 𝑩𝒂𝒕𝒄𝒉 𝑳𝒊𝒏𝒌 ◥", callback_data="getBatchLink")],
-                                   [InlineKeyboardButton("• 𝑪𝒍𝒐𝒔𝒆 𝑴𝒆𝒔𝒔𝒂𝒈𝒆 •", callback_data="closeMessage")]
+                                   [InlineKeyboardButton("• ɢᴇᴛ ʙᴀᴛᴄʜ ʟɪɴᴋ •", callback_data="getBatchLink")],
+                                   [InlineKeyboardButton("• ᴄʟᴏꜱᴇ ᴍᴇꜱꜱᴀɢᴇ •", callback_data="closeMessage")]
                                ]))
 
     elif "addToBatchFalse" in cb_data:
