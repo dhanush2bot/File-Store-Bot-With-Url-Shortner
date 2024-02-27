@@ -72,7 +72,7 @@ async def start(bot: Client, cmd: Message):
     if usr_cmd == "/start":
         await add_user_to_database(bot, cmd)
         await cmd.reply_photo(
-            photo=random.choice(Config.PICS),
+            photo="https://graph.org/file/ca175c67010e486e296f1.jpg",
             caption=Config.HOME_TEXT.format(cmd.from_user.first_name, cmd.from_user.id),
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
@@ -367,7 +367,7 @@ async def button(bot: Client, cmd: CallbackQuery):
 
     elif "gotohome" in cb_data:
         await cmd.reply_photo(
-            photo=random.choice(Config.PICS),
+            photo="https://graph.org/file/ca175c67010e486e296f1.jpg",
             caption=Config.HOME_TEXT.format(cmd.message.chat.first_name, cmd.message.chat.id),
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
@@ -425,7 +425,7 @@ async def button(bot: Client, cmd: CallbackQuery):
                 )
                 return
         await cmd.reply_photo(
-            photo=random.choice(Config.PICS),
+            photo="https://graph.org/file/ca175c67010e486e296f1.jpg",
             caption=Config.HOME_TEXT.format(cmd.message.chat.first_name, cmd.message.chat.id),
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
