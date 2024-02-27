@@ -15,6 +15,7 @@ from pyrogram.errors import (
 )
 
 broadcast_ids = {}
+scheduled_broadcasts = []
 
 
 async def send_msg(user_id, message):
@@ -35,6 +36,10 @@ async def send_msg(user_id, message):
         return 400, f"{user_id} : user id invalid\n"
     except Exception as e:
         return 500, f"{user_id} : {traceback.format_exc()}\n"
+    
+
+async def schedule_broadcast(m, db, scheduled_time):
+    scheduled_broadcasts.append((m, db, scheduled_time))
 
 
 async def main_broadcast_handler(m, db):
@@ -100,3 +105,20 @@ async def main_broadcast_handler(m, db):
             quote=True
         )
     await aiofiles.os.remove('broadcast.txt')
+
+#scheduled broadcast
+
+async def check_scheduled_broadcasts():
+    while True:
+        current_time = datetime.datetime.now()
+        for i, (m, db, scheduled_time) in enumerate(scheduled_broadcasts):
+            if current_time >= scheduled_time:
+                await main_broadcast_handler(m, db)
+                scheduled_broadcasts.pop(i)
+                break
+        await asyncio.sleep(10)  # Check every 10 seconds for scheduled broadcasts
+
+async def start_scheduler():
+    await asyncio.gather(check_scheduled_broadcasts())
+
+asyncio.run(start_scheduler())
